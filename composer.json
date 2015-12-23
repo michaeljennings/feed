@@ -1,0 +1,14 @@
+{
+    "name": "michaeljennings/feed",
+    "description": "A simple activity feed for laravel",
+    "type": "package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Jennings",
+            "email": "michael.jennings91@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
