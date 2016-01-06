@@ -1,7 +1,8 @@
 {
   "name": "michaeljennings/feed",
   "description": "A simple activity feed for laravel",
-  "type": "package",
+  "version": "0.1",
+  "keywords": ["laravel", "feed", "activity"],
   "license": "MIT",
   "authors": [
     {
@@ -11,6 +12,11 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "nesbot/carbon": "~1.0"
+    "laravel/laravel": "5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Michaeljennings\\Feed\\": "src/"
+    }
   }
 }
