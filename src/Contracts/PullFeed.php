@@ -5,12 +5,20 @@ namespace Michaeljennings\Feed\Contracts;
 interface PullFeed
 {
     /**
-     * Get all of the notifications for the provided notifiable members.
+     * Get all of the unread notifications for the provided notifiable members.
      *
      * @param array|Notifiable $notifiable
      * @return mixed
      */
     public function pull($notifiable);
+
+    /**
+     * Get all of the read notifications for the provided notifiable members.
+     *
+     * @param array|Notifiable $notifiable
+     * @return mixed
+     */
+    public function pullRead($notifiable);
 
     /**
      * Set the amount to limit the feed by.
