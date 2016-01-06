@@ -3,6 +3,7 @@
 namespace Michaeljennings\Feed;
 
 use Michaeljennings\Feed\Contracts\Notifiable;
+use Michaeljennings\Feed\Contracts\Notification;
 use Michaeljennings\Feed\Contracts\PullFeed;
 use Michaeljennings\Feed\Contracts\PushFeed;
 use Michaeljennings\Feed\Contracts\Repository;
@@ -69,7 +70,7 @@ class Feed implements PushFeed, PullFeed
     }
 
     /**
-     * Get all of the notifications for the provided notifiable members.
+     * Get all of the unread notifications for the provided notifiable members.
      *
      * @param array|Notifiable $notifiable
      * @return mixed
@@ -89,6 +90,29 @@ class Feed implements PushFeed, PullFeed
         }, $notifiable);
 
         return $this->repository->getNotifications($types, $ids, $this->limit, $this->offset);
+    }
+
+    /**
+     * Get all of the read notifications for the provided notifiable members.
+     *
+     * @param array|Notifiable $notifiable
+     * @return mixed
+     */
+    public function pullRead($notifiable)
+    {
+        if ( ! is_array($notifiable)) {
+            $notifiable = func_get_args();
+        }
+
+        $types = array_map(function ($notifiable) {
+            return get_class($notifiable);
+        }, $notifiable);
+
+        $ids = array_map(function ($notifiable) {
+            return $notifiable->getKey();
+        }, $notifiable);
+
+        return $this->repository->getReadNotifications($types, $ids, $this->limit, $this->offset);
     }
 
     /**
@@ -115,6 +139,50 @@ class Feed implements PushFeed, PullFeed
         $this->offset = $offset;
 
         return $this;
+    }
+
+    /**
+     * Mark the provided notification as read.
+     *
+     * @param Notification $notification
+     * @return mixed
+     */
+    public function read(Notification $notification)
+    {
+        return $this->repository->read($notification);
+    }
+
+    /**
+     * Alias for the read function.
+     *
+     * @param Notification $notification
+     * @return mixed
+     */
+    public function markAsRead(Notification $notification)
+    {
+        return $this->read($notification);
+    }
+
+    /**
+     * Mark the provided notification as unread.
+     *
+     * @param Notification $notification
+     * @return mixed
+     */
+    public function unread(Notification $notification)
+    {
+        return $this->repository->unread($notification);
+    }
+
+    /**
+     * Alias for the unread function.
+     *
+     * @param Notification $notification
+     * @return mixed
+     */
+    public function markAsUnread(Notification $notification)
+    {
+        return $this->unread($notification);
     }
 
     /**
