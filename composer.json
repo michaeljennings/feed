@@ -20,6 +20,7 @@
   },
   "require-dev": {
     "phpunit/phpunit": "4.8.*",
+    "phpunit/dbunit": "2.0.*",
     "mockery/mockery": "0.9.*",
     "satooshi/php-coveralls": "1.0.*"
   },
@@ -28,5 +29,5 @@
       "Michaeljennings\\Feed\\Tests\\": "tests/"
     }
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "stable"
 }
