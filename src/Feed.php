@@ -49,6 +49,10 @@ class Feed implements PushFeed, PullFeed
             $notifiable = [$notifiable];
         }
 
+        if (is_string('notification')) {
+            $notification = ['body' => $notification];
+        }
+
         foreach ($notifiable as $toBeNotified) {
             $notification = $this->makeNotification($notification);
 
