@@ -2,12 +2,15 @@
 
 namespace Michaeljennings\Feed;
 
+use Illuminate\Support\Collection;
 use Michaeljennings\Feed\Contracts\Notifiable;
+use Michaeljennings\Feed\Contracts\NotifiableGroup;
 use Michaeljennings\Feed\Contracts\Notification;
 use Michaeljennings\Feed\Contracts\PullFeed;
 use Michaeljennings\Feed\Contracts\PushFeed;
 use Michaeljennings\Feed\Contracts\Repository;
 use Michaeljennings\Feed\Events\NotificationAdded;
+use Michaeljennings\Feed\Exceptions\NotNotifiableException;
 
 class Feed implements PushFeed, PullFeed
 {
@@ -40,8 +43,9 @@ class Feed implements PushFeed, PullFeed
     /**
      * Push the provided notification to the notifiable members.
      *
-     * @param string|array     $notification
-     * @param array|Notifiable $notifiable
+     * @param string|array            $notification
+     * @param Notifiable[]|Notifiable $notifiable
+     * @throws NotNotifiableException
      */
     public function push($notification, $notifiable)
     {
@@ -49,13 +53,15 @@ class Feed implements PushFeed, PullFeed
             $notifiable = [$notifiable];
         }
 
-        if (is_string('notification')) {
-            $notification = ['body' => $notification];
+        foreach ($notifiable as $toBeNotified) {
+            if ( ! $toBeNotified instanceof Notifiable) {
+                throw new NotNotifiableException("The notifiable members must implement the notifiable interface.");
+            }
         }
 
-        foreach ($notifiable as $toBeNotified) {
-            $notification = $this->makeNotification($notification);
+        $notification = is_string('notification') ? ['body' => $notification] : $notification;
 
+        foreach ($notifiable as $toBeNotified) {
             $this->pushNotification($notification, $toBeNotified);
         }
     }
@@ -68,9 +74,15 @@ class Feed implements PushFeed, PullFeed
      */
     protected function pushNotification($notification, Notifiable $notifiable)
     {
-        $notifiable->notifications()->save($notification);
+        if ($notifiable instanceof NotifiableGroup) {
+            foreach ($notifiable->getGroup() as $toBeNotified) {
+                $this->pushNotification($notification, $toBeNotified);
+            }
+        } else {
+            $notification = $notifiable->notifications()->create($notification);
 
-        event(new NotificationAdded($notification, $notifiable));
+            event(new NotificationAdded($notification, $notifiable));
+        }
     }
 
     /**
@@ -78,11 +90,30 @@ class Feed implements PushFeed, PullFeed
      *
      * @param array|Notifiable $notifiable
      * @return mixed
+     * @throws NotNotifiableException
      */
     public function pull($notifiable)
     {
         if ( ! is_array($notifiable)) {
             $notifiable = func_get_args();
+        }
+
+        foreach ($notifiable as $key => $toBeNotified) {
+            if ( ! $toBeNotified instanceof Notifiable) {
+                throw new NotNotifiableException("The members passed to the pull must implement the notifiable interface");
+            }
+
+            if ($toBeNotified instanceof NotifiableGroup) {
+                $group = $toBeNotified->getGroup();
+
+                if ($group instanceof Collection) {
+                    $group = $group->all();
+                }
+
+                $notifiable = array_merge($notifiable, $group);
+
+                unset($notifiable[$key]);
+            }
         }
 
         $types = array_map(function ($notifiable) {
@@ -197,10 +228,6 @@ class Feed implements PushFeed, PullFeed
      */
     protected function makeNotification(array $notification)
     {
-        if (is_string($notification)) {
-            $notification = ['body' => $notification];
-        }
-
         return $this->repository->newNotification($notification);
     }
 }
