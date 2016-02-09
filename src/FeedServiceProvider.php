@@ -9,6 +9,16 @@ class FeedServiceProvider extends ServiceProvider
     /**
      * @inheritdoc
      */
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__.'/../migrations/' => database_path('migrations')
+        ], 'migrations');
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function register()
     {
         $this->app->bind('michaeljennings.feed.repository', 'Michaeljennings\Feed\Notifications\Repository');
