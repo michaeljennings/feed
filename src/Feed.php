@@ -10,6 +10,8 @@ use Michaeljennings\Feed\Contracts\PullFeed;
 use Michaeljennings\Feed\Contracts\PushFeed;
 use Michaeljennings\Feed\Contracts\Repository;
 use Michaeljennings\Feed\Events\NotificationAdded;
+use Michaeljennings\Feed\Events\NotificationRead;
+use Michaeljennings\Feed\Events\NotificationUnread;
 use Michaeljennings\Feed\Exceptions\NotNotifiableException;
 
 class Feed implements PushFeed, PullFeed
@@ -200,7 +202,11 @@ class Feed implements PushFeed, PullFeed
      */
     public function read(Notification $notification)
     {
-        return $this->repository->read($notification);
+        $this->repository->read($notification);
+
+        event(new NotificationRead($notification));
+
+        return $notification;
     }
 
     /**
@@ -222,7 +228,11 @@ class Feed implements PushFeed, PullFeed
      */
     public function unread(Notification $notification)
     {
-        return $this->repository->unread($notification);
+        $this->repository->unread($notification);
+
+        event(new NotificationUnread($notification));
+
+        return $notification;
     }
 
     /**
