@@ -76,7 +76,7 @@ class Feed implements PushFeed, PullFeed
     {
         if ($notifiable instanceof NotifiableGroup) {
             foreach ($notifiable->getGroup() as $toBeNotified) {
-                $this->pushNotification($notification, $toBeNotified);
+                $this->push($notification, $toBeNotified);
             }
         } else {
             $notification = $notifiable->notifications()->create($notification);
@@ -98,23 +98,7 @@ class Feed implements PushFeed, PullFeed
             $notifiable = func_get_args();
         }
 
-        foreach ($notifiable as $key => $toBeNotified) {
-            if ( ! $toBeNotified instanceof Notifiable) {
-                throw new NotNotifiableException("The members passed to the pull must implement the notifiable interface");
-            }
-
-            if ($toBeNotified instanceof NotifiableGroup) {
-                $group = $toBeNotified->getGroup();
-
-                if ($group instanceof Collection) {
-                    $group = $group->all();
-                }
-
-                $notifiable = array_merge($notifiable, $group);
-
-                unset($notifiable[$key]);
-            }
-        }
+        $notifiable = $this->getUsersToPullFor($notifiable);
 
         $types = array_map(function ($notifiable) {
             return get_class($notifiable);
@@ -139,6 +123,8 @@ class Feed implements PushFeed, PullFeed
             $notifiable = func_get_args();
         }
 
+        $notifiable = $this->getUsersToPullFor($notifiable);
+
         $types = array_map(function ($notifiable) {
             return get_class($notifiable);
         }, $notifiable);
@@ -148,6 +134,36 @@ class Feed implements PushFeed, PullFeed
         }, $notifiable);
 
         return $this->repository->getReadNotifications($types, $ids, $this->limit, $this->offset);
+    }
+
+    /**
+     * Get the users to pull notifications for from the notifiable members.
+     *
+     * @param array $notifiable
+     * @return array
+     * @throws NotNotifiableException
+     */
+    protected function getUsersToPullFor($notifiable)
+    {
+        foreach ($notifiable as $key => $toBeNotified) {
+            if ( ! $toBeNotified instanceof Notifiable) {
+                throw new NotNotifiableException("The members passed to the pull must implement the notifiable interface");
+            }
+
+            if ($toBeNotified instanceof NotifiableGroup) {
+                $group = $toBeNotified->getGroup();
+
+                if ($group instanceof Collection) {
+                    $group = $group->all();
+                }
+
+                $notifiable = array_merge($notifiable, $group);
+
+                unset($notifiable[$key]);
+            }
+        }
+
+        return $notifiable;
     }
 
     /**
