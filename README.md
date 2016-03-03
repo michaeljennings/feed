@@ -34,6 +34,7 @@ $feed->markAsRead($notification);
 ## Navigation
 
 - [Installation](#installation)
+- [Using the Feed](#using-the-feed)
 - [Setting Up Notifiable Models](#setting-up-notifiable-models)
     - [Notifiable Groups](#notifiable-groups)
 - [Available Methods](#available-methods)
@@ -66,6 +67,36 @@ Once installed add the service provider to the providers array in `config/app.ph
 The package comes with migrations to setup the default database structure. We recommend using the migration and adding any columns as needed.
 
 To publish the migrations run `php artisan vendor:publish`.
+
+## Using the Feed
+
+Once installed you can access the feed in multiple ways.
+
+Firstly you can dependency inject it from the IOC container by either the push or pull feed interfaces. Both interfaces will return the same instance, it's just to make your code more readable.
+
+```php
+public function __construct(
+    Michaeljennings\Feed\Contracts\PullFeed $pullFeed,   
+    Michaeljennings\Feed\Contracts\PushFeed $pushFeed,   
+) {
+    $this->pullFeed = $pullFeed;
+    $this->pushFeed = $pushFeed;
+}
+```
+
+Or you there is a helper method.
+
+```php
+$feed = feed();
+```
+
+Or if you want to use a facade you can register it in the aliases array in `config/app.php`.
+
+```php
+'aliases' => [
+    Michaeljennings\Feed\Facades\Feed::class
+]
+```
 
 ## Setting Up Notifiable Models
 
