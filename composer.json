@@ -1,6 +1,6 @@
 {
   "name": "michaeljennings/feed",
-  "description": "A simple activity feed for laravel",
+  "description": "A simple activity feed for laravel 5+",
   "version": "0.1",
   "keywords": ["laravel", "feed", "activity"],
   "license": "MIT",
@@ -16,7 +16,10 @@
   "autoload": {
     "psr-4": {
       "Michaeljennings\\Feed\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "require-dev": {
     "phpunit/phpunit": "4.8.*",

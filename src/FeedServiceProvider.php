@@ -21,6 +21,8 @@ class FeedServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
+
         $this->app->bind('michaeljennings.feed.repository', 'Michaeljennings\Feed\Notifications\Repository');
 
         $this->app->bind('michaeljennings.feed', function($app) {
