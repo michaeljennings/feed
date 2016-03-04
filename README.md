@@ -218,6 +218,14 @@ When the notification is read marked as read a `NotificationRead` event will be 
 
 You can then listen for this and then broadcast it etc.
 
+```php
+protected $listen = [
+    'Michaeljennings\Feed\Events\NotificationRead' => [
+        'App\Listeners\BroadcastReadNotification',
+    ],
+];
+```
+
 ### Marking Notification as Unread
 
 To mark a notification as unread you can either use the `markAsUnread` method, or it is aliased to `unread` if you prefer.
@@ -230,3 +238,11 @@ $feed->unread($notification);
 When the notification is read marked as unread a `NotificationUnread` event will be fired. 
 
 You can then listen for this and then broadcast it etc.
+
+```php
+protected $listen = [
+    'Michaeljennings\Feed\Events\NotificationUnread' => [
+        'App\Listeners\BroadcastUnreadNotification',
+    ],
+];
+```
