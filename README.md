@@ -94,7 +94,7 @@ Or if you want to use a facade you can register it in the aliases array in `conf
 
 ```php
 'aliases' => [
-    Michaeljennings\Feed\Facades\Feed::class
+    'Feed' => Michaeljennings\Feed\Facades\Feed::class
 ]
 ```
 
