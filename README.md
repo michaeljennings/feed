@@ -76,8 +76,8 @@ Firstly you can dependency inject it from the IOC container by either the push o
 
 ```php
 public function __construct(
-    Michaeljennings\Feed\Contracts\PullFeed $pullFeed,   
-    Michaeljennings\Feed\Contracts\PushFeed $pushFeed,   
+    Michaeljennings\Feed\Contracts\PullFeed $pullFeed,
+    Michaeljennings\Feed\Contracts\PushFeed $pushFeed
 ) {
     $this->pullFeed = $pullFeed;
     $this->pushFeed = $pushFeed;
