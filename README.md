@@ -24,8 +24,8 @@ $feed->push([
 // Get all of the notifications for a user
 $notifications = $feed->pull($user);
 
-// Get 10 notifications for the team
-$notifications = $feed->limit(10)->pull($team);
+// Get 10 notifications for the user
+$notifications = $feed->limit(10)->pull($user);
 
 // Mark a notification as read
 $feed->markAsRead($notification);
