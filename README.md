@@ -52,7 +52,7 @@ To install through composer include the package in your `composer.json`.
 
     "michaeljennings/feed": "0.1.*"
 
-Run `composer install` or `composer update` to download the dependencies or you can run `composer require michaeljennings/feed`.
+Run `composer install` or `composer update` to download the dependencies, or you can run `composer require michaeljennings/feed`.
 
 Once installed add the service provider to the providers array in `config/app.php`.
 
@@ -84,13 +84,13 @@ public function __construct(
 }
 ```
 
-Or you there is a helper method.
+Or you there is a `feed` helper method.
 
 ```php
 $feed = feed();
 ```
 
-Or if you want to use a facade you can register it in the aliases array in `config/app.php`.
+Or if you want to use the facade you can register it in the aliases array in `config/app.php`.
 
 ```php
 'aliases' => [
@@ -100,7 +100,7 @@ Or if you want to use a facade you can register it in the aliases array in `conf
 
 ## Setting Up Notifiable Models
 
-To set up a notifiable model you simply need to implement the notifiable interface and then use the notifiable trait.
+To set up a notifiable model you just need to implement the notifiable interface, and then use the notifiable trait in your model.
 
 This will set up the required relationships.
 
@@ -116,13 +116,11 @@ class User extends Model implements NotifiableContract
 
 ### Notifiable Groups
 
-It is also possible to set up groups of notifiable models.
+It is also possible to set up groups of notifiable models, an example of when this would be useful is having a team of users. This will allow us to push a notification to all the members of that group.
 
-An example of when this would be useful is having a team of users. This will allow us to push a notification to all the members of that group.
+To set up a notifiable group you need implement the notifiable group interface on the group model. This will add a method called `getGroup` which requires you to return the members you would like to be notified.
 
-To set up a notifiable group simply implement the notifiable group interface. This will add a method called `getGroup` which requires you to return the members you would like to be notified.
-
-In the example below we have a team model which implements the group interface. It has a `users` relationship which returns all of the users belonging to the group. The in the `getGroup` method we simply return the users.
+In the example below we have a team model which implements the group interface. It has a `users` relationship which returns all of the users belonging to the team. Then in the `getGroup` method we simply return the users.
 
 ```php
 use Michaeljennings\Feed\Contracts\NotifiableGroup;
@@ -143,11 +141,11 @@ class Team extends Model implements NotifiableGroup
 
 ## Available Methods
 
-Below is a list of all of the currently available methods. If you think of anything you want to add please feel free to create an issue or pull request.
+Below is a list of all of the currently available notification methods. If you think of anything you want to add please feel free to create an issue, or a pull request.
 
 ### Push
 
-The push method allows you to push a notification to a notifiable model, or multiple notifiable models.
+The push method allows you to push a notification to a notifiable model, multiple notifiable models, or a notifiable group.
 
 When pushing to a notifiable group each member of the group will get their own notification, it will not share one notification for all of the members.
 
@@ -162,9 +160,9 @@ $feed->push([
 
 When the notification is pushed a `NotificationAdded` event will be fired. 
 
-You can then listen for this and then broadcast it, send an email etc.
+You can then listen for this and then broadcast the notification, send an email etc.
 
-You simply need to register the listeners in the event service provider.
+You just need to register the listeners in the event service provider.
 
 ```php
 protected $listen = [
