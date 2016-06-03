@@ -61,7 +61,7 @@ class Feed implements PushFeed, PullFeed
             }
         }
 
-        $notification = is_string('notification') ? ['body' => $notification] : $notification;
+        $notification = is_string($notification) ? ['body' => $notification] : $notification;
 
         foreach ($notifiable as $toBeNotified) {
             $this->pushNotification($notification, $toBeNotified);
