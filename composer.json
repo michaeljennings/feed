@@ -1,7 +1,6 @@
 {
   "name": "michaeljennings/feed",
   "description": "A simple activity feed for laravel 5+",
-  "version": "0.1",
   "keywords": ["laravel", "feed", "activity"],
   "license": "MIT",
   "authors": [
