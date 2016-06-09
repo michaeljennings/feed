@@ -13,6 +13,7 @@ use Michaeljennings\Feed\Events\NotificationAdded;
 use Michaeljennings\Feed\Events\NotificationRead;
 use Michaeljennings\Feed\Events\NotificationUnread;
 use Michaeljennings\Feed\Exceptions\NotNotifiableException;
+use Traversable;
 
 class Feed implements PushFeed, PullFeed
 {
@@ -51,7 +52,7 @@ class Feed implements PushFeed, PullFeed
      */
     public function push($notification, $notifiable)
     {
-        if ( ! is_array($notifiable)) {
+        if ( ! is_array($notifiable) && ! $notifiable instanceof Traversable) {
             $notifiable = [$notifiable];
         }
 
