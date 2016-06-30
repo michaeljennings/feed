@@ -31,16 +31,16 @@ interface PushFeed
     /**
      * Mark the provided notification as unread.
      *
-     * @param Notification $notification
+     * @param int|Notification $notification
      * @return mixed
      */
-    public function unread(Notification $notification);
+    public function unread($notification);
 
     /**
      * Alias for the unread function.
      *
-     * @param Notification $notification
+     * @param int|Notification $notification
      * @return mixed
      */
-    public function markAsUnread(Notification $notification);
+    public function markAsUnread($notification);
 }
