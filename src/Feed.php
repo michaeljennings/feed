@@ -57,7 +57,7 @@ class Feed implements PushFeed, PullFeed
         }
 
         foreach ($notifiable as $toBeNotified) {
-            if ( ! $toBeNotified instanceof Notifiable && !$tobeNotified instanceof NotifiableGroup) {
+            if ( ! $toBeNotified instanceof Notifiable && !$toBeNotified instanceof NotifiableGroup) {
                 throw new NotNotifiableException("The notifiable members must implement the notifiable interface.");
             }
         }
