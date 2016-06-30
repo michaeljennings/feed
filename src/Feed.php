@@ -57,7 +57,7 @@ class Feed implements PushFeed, PullFeed
         }
 
         foreach ($notifiable as $toBeNotified) {
-            if ( ! $toBeNotified instanceof Notifiable) {
+            if ( ! $toBeNotified instanceof Notifiable && !$tobeNotified instanceof NotifiableGroup) {
                 throw new NotNotifiableException("The notifiable members must implement the notifiable interface.");
             }
         }
@@ -75,7 +75,7 @@ class Feed implements PushFeed, PullFeed
      * @param string|array $notification
      * @param Notifiable   $notifiable
      */
-    protected function pushNotification($notification, Notifiable $notifiable)
+    protected function pushNotification($notification, $notifiable)
     {
         if ($notifiable instanceof NotifiableGroup) {
             foreach ($notifiable->getGroup() as $toBeNotified) {
