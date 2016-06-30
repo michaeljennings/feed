@@ -9,6 +9,17 @@ use Michaeljennings\Feed\Contracts\Repository as RepositoryContract;
 class Repository implements RepositoryContract
 {
     /**
+     * Find a notification by it's id
+     *
+     * @param int $id
+     * @return \Michaeljennings\Feed\Contracts\Notification
+     */
+    public function find($id)
+    {
+        return Notification::where('id', $id)->first();
+    }
+
+    /**
      * Create a new notification.
      *
      * @param array $notification
@@ -74,11 +85,15 @@ class Repository implements RepositoryContract
     /**
      * Mark the notification as read.
      *
-     * @param NotificationContract $notification
+     * @param int|NotificationContract $notification
      * @return mixed
      */
-    public function read(NotificationContract $notification)
+    public function read($notification)
     {
+        if(! $notification instanceof NotificationContract) {
+            $notification = $this->find($notification);
+        }
+
         $notification->read = true;
         $notification->read_at = new Carbon();
 
@@ -88,11 +103,15 @@ class Repository implements RepositoryContract
     /**
      * Mark the notification as unread.
      *
-     * @param NotificationContract $notification
+     * @param int|NotificationContract $notification
      * @return mixed
      */
-    public function unread(NotificationContract $notification)
+    public function unread($notification)
     {
+        if(! $notification instanceof NotificationContract) {
+            $notification = $this->find($notification);
+        }
+        
         $notification->read = false;
         $notification->read_at = null;
 

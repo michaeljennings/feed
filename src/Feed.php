@@ -198,10 +198,10 @@ class Feed implements PushFeed, PullFeed
     /**
      * Mark the provided notification as read.
      *
-     * @param Notification $notification
+     * @param int|Notification $notification
      * @return mixed
      */
-    public function read(Notification $notification)
+    public function read($notification)
     {
         $this->repository->read($notification);
 
@@ -213,10 +213,10 @@ class Feed implements PushFeed, PullFeed
     /**
      * Alias for the read function.
      *
-     * @param Notification $notification
+     * @param int|Notification $notification
      * @return mixed
      */
-    public function markAsRead(Notification $notification)
+    public function markAsRead($notification)
     {
         return $this->read($notification);
     }
@@ -224,10 +224,10 @@ class Feed implements PushFeed, PullFeed
     /**
      * Mark the provided notification as unread.
      *
-     * @param Notification $notification
+     * @param int|Notification $notification
      * @return mixed
      */
-    public function unread(Notification $notification)
+    public function unread($notification)
     {
         $this->repository->unread($notification);
 
@@ -239,10 +239,10 @@ class Feed implements PushFeed, PullFeed
     /**
      * Alias for the unread function.
      *
-     * @param Notification $notification
+     * @param int|Notification $notification
      * @return mixed
      */
-    public function markAsUnread(Notification $notification)
+    public function markAsUnread($notification)
     {
         return $this->unread($notification);
     }
