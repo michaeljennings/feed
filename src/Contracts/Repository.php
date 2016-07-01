@@ -5,6 +5,14 @@ namespace Michaeljennings\Feed\Contracts;
 interface Repository
 {
     /**
+     * Find a notification by it's id
+     *
+     * @param int $id
+     * @return \Michaeljennings\Feed\Contracts\Notification
+     */
+    public function find($id);
+    
+    /**
      * Create a new notification.
      *
      * @param array $notification
@@ -37,16 +45,16 @@ interface Repository
     /**
      * Mark the notification as read.
      *
-     * @param Notification $notification
+     * @param int|Notification $notification
      * @return mixed
      */
-    public function read(Notification $notification);
+    public function read($notification);
 
     /**
      * Mark the notification as unread.
      *
-     * @param Notification $notification
+     * @param int|Notification $notification
      * @return mixed
      */
-    public function unread(Notification $notification);
+    public function unread($notification);
 }
