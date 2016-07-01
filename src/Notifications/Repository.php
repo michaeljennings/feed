@@ -97,7 +97,9 @@ class Repository implements RepositoryContract
         $notification->read = true;
         $notification->read_at = new Carbon();
 
-        return $notification->save();
+        $notification->save();
+
+        return $notification;
     }
 
     /**
@@ -111,10 +113,12 @@ class Repository implements RepositoryContract
         if(! $notification instanceof NotificationContract) {
             $notification = $this->find($notification);
         }
-        
+
         $notification->read = false;
         $notification->read_at = null;
 
-        return $notification->save();
+        $notification->save();
+
+        return $notification;
     }
 }

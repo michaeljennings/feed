@@ -203,7 +203,7 @@ class Feed implements PushFeed, PullFeed
      */
     public function read($notification)
     {
-        $this->repository->read($notification);
+        $notification = $this->repository->read($notification);
 
         event(new NotificationRead($notification));
 
@@ -229,7 +229,7 @@ class Feed implements PushFeed, PullFeed
      */
     public function unread($notification)
     {
-        $this->repository->unread($notification);
+        $notification = $this->repository->unread($notification);
 
         event(new NotificationUnread($notification));
 
