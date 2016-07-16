@@ -52,20 +52,18 @@ class Notification extends Model implements NotificationContract, Store
     protected $filters = [];
 
     /**
-     * Indicates that the queries should be ordered by the latest
-     * notifications.
+     * The column results will be ordered by.
      *
      * @var null|int
      */
-    protected $latest = null;
+    protected $orderBy = 'created_at';
 
     /**
-     * Indicates that the queries should be ordered by the oldest
-     * notifications.
+     * The direction the columns will be ordered in.
      *
      * @var null|int
      */
-    protected $oldest = null;
+    protected $orderByDirection = 'desc';
 
     /**
      * The member to be notified.
@@ -90,7 +88,8 @@ class Notification extends Model implements NotificationContract, Store
     {
         $query = $this->whereIn('notifiable_type', $types)
                       ->whereIn('notifiable_id', $ids)
-                      ->where('read', false);
+                      ->where('read', false)
+                      ->orderBy($this->orderBy, $this->orderByDirection);
 
         if ($this->limit) {
             $query->limit($this->limit);
@@ -98,14 +97,6 @@ class Notification extends Model implements NotificationContract, Store
 
         if ($this->offset) {
             $query->offset($this->offset);
-        }
-
-        if ($this->latest) {
-            $query->latest($this->latest);
-        }
-
-        if ($this->oldest) {
-            $query->oldest($this->oldest);
         }
 
         foreach($this->filters as $filter) {
@@ -132,7 +123,8 @@ class Notification extends Model implements NotificationContract, Store
     {
         $query = $this->whereIn('notifiable_type', $types)
                       ->whereIn('notifiable_id', $ids)
-                      ->where('read', true);
+                      ->where('read', true)
+                      ->orderBy($this->orderBy, $this->orderByDirection);
 
         if ($this->limit) {
             $query->limit($this->limit);
@@ -140,14 +132,6 @@ class Notification extends Model implements NotificationContract, Store
 
         if ($this->offset) {
             $query->offset($this->offset);
-        }
-
-        if ($this->latest) {
-            $query->latest($this->latest);
-        }
-
-        if ($this->oldest) {
-            $query->oldest($this->oldest);
         }
 
         foreach($this->filters as $filter) {
@@ -221,7 +205,8 @@ class Notification extends Model implements NotificationContract, Store
      */
     public function latest($column = 'created_at')
     {
-        $this->latest = $column;
+        $this->orderBy = $column;
+        $this->orderByDirection = 'desc';
 
         return $this;
     }
@@ -234,7 +219,8 @@ class Notification extends Model implements NotificationContract, Store
      */
     public function oldest($column = 'created_at')
     {
-        $this->oldest = $column;
+        $this->orderBy = $column;
+        $this->orderByDirection = 'asc';
 
         return $this;
     }
