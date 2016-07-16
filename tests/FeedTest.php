@@ -6,6 +6,7 @@ use Michaeljennings\Feed\Events\NotificationAdded;
 use Michaeljennings\Feed\Events\NotificationRead;
 use Michaeljennings\Feed\Events\NotificationUnread;
 use Michaeljennings\Feed\Facades\Feed;
+use stdClass;
 
 class FeedTest extends DbTestCase
 {
@@ -561,6 +562,28 @@ class FeedTest extends DbTestCase
 
         $this->assertEquals(4, $notifications->count());
         $this->assertEquals('Notification 1', $notifications->first()->body);
+    }
+
+    /**
+     * @test
+     * @expectedException \Michaeljennings\Feed\Exceptions\NotNotifiableException
+     */
+    public function it_tests_not_notifiable_exception_is_thrown_when_pushing()
+    {
+        $feed = $this->make();
+
+        $feed->push('this is a test', new stdClass);
+    }
+
+    /**
+     * @test
+     * @expectedException \Michaeljennings\Feed\Exceptions\NotNotifiableException
+     */
+    public function it_tests_not_notifiable_exception_is_thrown_when_pulling()
+    {
+        $feed = $this->make();
+
+        $feed->pull(new stdClass);
     }
 
     /**
