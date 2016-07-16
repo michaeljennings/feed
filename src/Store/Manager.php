@@ -14,7 +14,7 @@ class Manager extends BaseManager
      */
     public function createEloquentDriver()
     {
-        return new Notification();
+        return new $this->app['config']['feed']['drivers']['eloquent']['model'];
     }
 
     /**

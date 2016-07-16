@@ -26,7 +26,7 @@ return [
 
     'drivers' => [
         'eloquent' => [
-            'model' => 'Michaeljennings\Feed\Notifications\Notification',
+            'model' => 'Michaeljennings\Feed\Store\Eloquent\Notification',
         ],
     ]
 

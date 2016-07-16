@@ -13,6 +13,6 @@ class Feed extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'michaeljennings.feed';
+        return 'feed';
     }
 }

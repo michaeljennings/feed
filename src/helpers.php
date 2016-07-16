@@ -12,7 +12,7 @@ if ( ! function_exists('feed')) {
      */
     function feed($notifiable = null)
     {
-        $feed = app('michaeljennings.feed');
+        $feed = app('feed');
 
         if ($notifiable) {
             return $feed->pull($notifiable);
