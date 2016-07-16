@@ -1,4 +1,4 @@
-# Feed
+# Feed [![Build Status](https://travis-ci.org/michaeljennings/feed.svg?branch=master)](https://travis-ci.org/michaeljennings/feed) [![Coverage Status](https://coveralls.io/repos/github/michaeljennings/feed/badge.svg?branch=master)](https://coveralls.io/github/michaeljennings/feed?branch=master)
 
 A basic notification feed for laravel 5+.
 
