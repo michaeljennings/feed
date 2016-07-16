@@ -233,19 +233,4 @@ class Feed implements PushFeed, PullFeed
     {
         return $this->unread($notification);
     }
-
-    /**
-     * Create a new notification.
-     *
-     * @param array $notification
-     * @return Notification
-     */
-    protected function makeNotification($notification)
-    {
-        if ( ! is_array($notification)) {
-            $notification = ['body' => $notification];
-        }
-
-        return $this->store->newNotification($notification);
-    }
 }
