@@ -18,15 +18,15 @@ interface PushFeed
      * @param int|Notification $notification
      * @return mixed
      */
-    public function read($notification);
+    public function markAsRead($notification);
 
     /**
-     * Alias for the read function.
+     * Alias for the mark as read function.
      *
      * @param int|Notification $notification
      * @return mixed
      */
-    public function markAsRead($notification);
+    public function read($notification);
 
     /**
      * Mark the provided notification as unread.
@@ -34,13 +34,13 @@ interface PushFeed
      * @param int|Notification $notification
      * @return mixed
      */
-    public function unread($notification);
+    public function markAsUnread($notification);
 
     /**
-     * Alias for the unread function.
+     * Alias for the mark as unread function.
      *
      * @param int|Notification $notification
      * @return mixed
      */
-    public function markAsUnread($notification);
+    public function unread($notification);
 }

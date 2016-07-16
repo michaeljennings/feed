@@ -8,7 +8,7 @@ use Michaeljennings\Feed\Contracts\NotifiableGroup;
 use Michaeljennings\Feed\Contracts\Notification;
 use Michaeljennings\Feed\Contracts\PullFeed;
 use Michaeljennings\Feed\Contracts\PushFeed;
-use Michaeljennings\Feed\Contracts\Repository;
+use Michaeljennings\Feed\Contracts\Store;
 use Michaeljennings\Feed\Events\NotificationAdded;
 use Michaeljennings\Feed\Events\NotificationRead;
 use Michaeljennings\Feed\Events\NotificationUnread;
@@ -18,29 +18,15 @@ use Traversable;
 class Feed implements PushFeed, PullFeed
 {
     /**
-     * The amount to limit the feed by.
+     * The notification store implementation.
      *
-     * @var int|string|null
+     * @var Store
      */
-    protected $limit = null;
+    protected $store;
 
-    /**
-     * The amount to offset the feed by.
-     *
-     * @var int|string|null
-     */
-    protected $offset = null;
-
-    /**
-     * The notification repository implementation.
-     *
-     * @var Repository
-     */
-    protected $repository;
-
-    public function __construct(Repository $repository)
+    public function __construct(Store $store)
     {
-        $this->repository = $repository;
+        $this->store = $store;
     }
 
     /**
@@ -82,6 +68,7 @@ class Feed implements PushFeed, PullFeed
                 $this->push($notification, $toBeNotified);
             }
         } else {
+            // @todo Change this fucking shite
             $notification = $notifiable->notifications()->create($notification);
 
             event(new NotificationAdded($notification, $notifiable));
@@ -111,7 +98,7 @@ class Feed implements PushFeed, PullFeed
             return $notifiable->getKey();
         }, $notifiable);
 
-        return $this->repository->getNotifications($types, $ids, $this->limit, $this->offset);
+        return $this->store->getNotifications($types, $ids);
     }
 
     /**
@@ -136,7 +123,7 @@ class Feed implements PushFeed, PullFeed
             return $notifiable->getKey();
         }, $notifiable);
 
-        return $this->repository->getReadNotifications($types, $ids, $this->limit, $this->offset);
+        return $this->store->getReadNotifications($types, $ids);
     }
 
     /**
@@ -177,7 +164,7 @@ class Feed implements PushFeed, PullFeed
      */
     public function limit($limit)
     {
-        $this->limit = $limit;
+        $this->store->limit($limit);
 
         return $this;
     }
@@ -190,7 +177,7 @@ class Feed implements PushFeed, PullFeed
      */
     public function offset($offset)
     {
-        $this->offset = $offset;
+        $this->store->offset($offset);
 
         return $this;
     }
@@ -201,9 +188,9 @@ class Feed implements PushFeed, PullFeed
      * @param int|Notification $notification
      * @return mixed
      */
-    public function read($notification)
+    public function markAsread($notification)
     {
-        $notification = $this->repository->read($notification);
+        $notification = $this->store->markAsRead($notification);
 
         event(new NotificationRead($notification));
 
@@ -211,14 +198,14 @@ class Feed implements PushFeed, PullFeed
     }
 
     /**
-     * Alias for the read function.
+     * Alias for the mark as read function.
      *
      * @param int|Notification $notification
      * @return mixed
      */
-    public function markAsRead($notification)
+    public function read($notification)
     {
-        return $this->read($notification);
+        return $this->markAsRead($notification);
     }
 
     /**
@@ -227,9 +214,9 @@ class Feed implements PushFeed, PullFeed
      * @param int|Notification $notification
      * @return mixed
      */
-    public function unread($notification)
+    public function markAsUnread($notification)
     {
-        $notification = $this->repository->unread($notification);
+        $notification = $this->store->markAsUnread($notification);
 
         event(new NotificationUnread($notification));
 
@@ -237,12 +224,12 @@ class Feed implements PushFeed, PullFeed
     }
 
     /**
-     * Alias for the unread function.
+     * Alias for the mark as unread function.
      *
      * @param int|Notification $notification
      * @return mixed
      */
-    public function markAsUnread($notification)
+    public function unread($notification)
     {
         return $this->unread($notification);
     }
@@ -251,10 +238,14 @@ class Feed implements PushFeed, PullFeed
      * Create a new notification.
      *
      * @param array $notification
-     * @return Notifications\Notification
+     * @return Notification
      */
-    protected function makeNotification(array $notification)
+    protected function makeNotification($notification)
     {
-        return $this->repository->newNotification($notification);
+        if ( ! is_array($notification)) {
+            $notification = ['body' => $notification];
+        }
+
+        return $this->store->newNotification($notification);
     }
 }
