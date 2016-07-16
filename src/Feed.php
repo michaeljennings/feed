@@ -188,7 +188,7 @@ class Feed implements PushFeed, PullFeed
      * @param int|Notification $notification
      * @return mixed
      */
-    public function markAsread($notification)
+    public function markAsRead($notification)
     {
         $notification = $this->store->markAsRead($notification);
 
