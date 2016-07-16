@@ -23,15 +23,19 @@ class FeedServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Michaeljennings\Feed\Contracts\Store', function($app) {
+        $this->app->bind('feed.manager', function($app) {
+            return new Manager($app);
+        });
+
+        $this->app->bind('feed.store', function($app) {
             return (new Manager($app))->driver();
         });
 
         $this->app->bind('feed', function($app) {
-            return new Feed($app['Michaeljennings\Feed\Contracts\Store']);
+            return new Feed($app['feed.store']);
         });
 
-        $this->app->alias('Michaeljennings\Feed\Contracts\Store', 'feed.store');
+        $this->app->alias('feed.store', 'Michaeljennings\Feed\Contracts\Store');
         $this->app->alias('feed', 'Michaeljennings\Feed\Contracts\PullFeed');
         $this->app->alias('feed', 'Michaeljennings\Feed\Contracts\PushFeed');
     }
