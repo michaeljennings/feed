@@ -2,6 +2,8 @@
 
 namespace Michaeljennings\Feed\Contracts;
 
+use Michaeljennings\Feed\Store\Eloquent\Notification;
+
 interface Store
 {
     /**
@@ -43,6 +45,22 @@ interface Store
     public function offset($offset);
 
     /**
+     * Set the amount to paginate the results by.
+     *
+     * @param int $perPage
+     * @return $this
+     */
+    public function paginateResults($perPage);
+
+    /**
+     * Add a filter to be called at run time.
+     *
+     * @param callable $filter
+     * @return $this
+     */
+    public function filter(callable $filter);
+
+    /**
      * Mark the provided notification as read.
      *
      * @param Notification|int|array $notifications
@@ -57,12 +75,4 @@ interface Store
      * @return Notification[]
      */
     public function markAsUnread($notifications);
-
-    /**
-     * Set the amount to paginate the results by.
-     *
-     * @param int $perPage
-     * @return $this
-     */
-    public function paginateResults($perPage);
 }

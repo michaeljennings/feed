@@ -196,6 +196,19 @@ class Feed implements PushFeed, PullFeed
     }
 
     /**
+     * Add a filter to be called on the query results.
+     *
+     * @param callable $filter
+     * @return $this
+     */
+    public function filter(callable $filter)
+    {
+        $this->store->filter($filter);
+
+        return $this;
+    }
+
+    /**
      * Mark the provided notification as read.
      *
      * @param int|Notification|array $notifications

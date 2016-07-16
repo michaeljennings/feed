@@ -45,6 +45,13 @@ class Notification extends Model implements NotificationContract, Store
     protected $paginate = null;
 
     /**
+     * An array of closures to be run when
+     *
+     * @var callable[]
+     */
+    protected $filters = [];
+
+    /**
      * The member to be notified.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -77,6 +84,10 @@ class Notification extends Model implements NotificationContract, Store
             $query->offset($this->offset);
         }
 
+        foreach($this->filters as $filter) {
+            $filter($query);
+        }
+
         if ($this->paginate) {
             return $query->paginate($this->paginate);
         }
@@ -105,6 +116,10 @@ class Notification extends Model implements NotificationContract, Store
 
         if ($this->offset) {
             $query->offset($this->offset);
+        }
+
+        foreach($this->filters as $filter) {
+            $filter($query);
         }
 
         if ($this->paginate) {
@@ -149,6 +164,19 @@ class Notification extends Model implements NotificationContract, Store
     public function paginateResults($perPage)
     {
         $this->paginate = $perPage;
+
+        return $this;
+    }
+
+    /**
+     * Add a filter to be called at run time.
+     *
+     * @param callable $filter
+     * @return $this
+     */
+    public function filter(callable $filter)
+    {
+        $this->filters[] = $filter;
 
         return $this;
     }
