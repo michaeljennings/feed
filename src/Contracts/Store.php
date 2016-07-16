@@ -2,8 +2,6 @@
 
 namespace Michaeljennings\Feed\Contracts;
 
-use Michaeljennings\Feed\Store\Eloquent\Notification;
-
 interface Store
 {
     /**

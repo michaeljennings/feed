@@ -420,6 +420,67 @@ class FeedTest extends DbTestCase
     /**
      * @test
      */
+    public function it_paginates_the_amount_of_notifications_returned()
+    {
+        $feed = $this->make();
+        $user = new User();
+
+        $feed->push('Notification 1', $user);
+        $feed->push('Notification 2', $user);
+        $feed->push('Notification 3', $user);
+        $feed->push('Notification 4', $user);
+
+        $notifications = $feed->paginate(2)->pull($user);
+
+        $this->assertEquals(2, $notifications->count());
+        $this->assertEquals('Notification 1', $notifications->first()->body);
+        $this->assertEquals('Notification 2', $notifications->last()->body);
+
+        request()->merge(['page' => 2]);
+
+        $notifications = $feed->paginate(2)->pull($user);
+
+        $this->assertEquals(2, $notifications->count());
+        $this->assertEquals('Notification 3', $notifications->first()->body);
+        $this->assertEquals('Notification 4', $notifications->last()->body);
+    }
+
+    /**
+     * @test
+     */
+    public function it_paginates_the_amount_of_read_notifications_returned()
+    {
+        $feed = $this->make();
+        $user = new User();
+
+        $feed->push('Notification 1', $user);
+        $feed->push('Notification 2', $user);
+        $feed->push('Notification 3', $user);
+        $feed->push('Notification 4', $user);
+
+        $feed->markAsRead(1);
+        $feed->markAsRead(2);
+        $feed->markAsRead(3);
+        $feed->markAsRead(4);
+
+        $notifications = $feed->paginate(2)->pullRead($user);
+
+        $this->assertEquals(2, $notifications->count());
+        $this->assertEquals('Notification 1', $notifications->first()->body);
+        $this->assertEquals('Notification 2', $notifications->last()->body);
+
+        request()->merge(['page' => 2]);
+
+        $notifications = $feed->paginate(2)->pullRead($user);
+
+        $this->assertEquals(2, $notifications->count());
+        $this->assertEquals('Notification 3', $notifications->first()->body);
+        $this->assertEquals('Notification 4', $notifications->last()->body);
+    }
+
+    /**
+     * @test
+     */
     public function it_fires_a_notification_added_event_when_a_notification_is_pushed()
     {
         $this->expectsEvents(NotificationAdded::class);
