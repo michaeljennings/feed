@@ -481,6 +481,50 @@ class FeedTest extends DbTestCase
     /**
      * @test
      */
+    public function it_filters_the_notifications()
+    {
+        $feed = $this->make();
+        $user = new User();
+
+        $feed->push('Notification 1', $user);
+        $feed->push('Notification 2', $user);
+        $feed->push('Notification 3', $user);
+        $feed->push('Notification 4', $user);
+
+        $notifications = $feed->filter(function($query) {
+            $query->where('body', 'Notification 1');
+        })->pull($user);
+
+        $this->assertEquals(1, $notifications->count());
+        $this->assertEquals('Notification 1', $notifications->first()->body);
+    }
+
+    /**
+     * @test
+     */
+    public function it_filters_the_read_notifications()
+    {
+        $feed = $this->make();
+        $user = new User();
+
+        $feed->push('Notification 1', $user);
+        $feed->push('Notification 2', $user);
+        $feed->push('Notification 3', $user);
+        $feed->push('Notification 4', $user);
+
+        $feed->markAsRead(1, 2, 3, 4);
+
+        $notifications = $feed->filter(function($query) {
+            $query->where('body', 'Notification 1');
+        })->pullRead($user);
+
+        $this->assertEquals(1, $notifications->count());
+        $this->assertEquals('Notification 1', $notifications->first()->body);
+    }
+
+    /**
+     * @test
+     */
     public function it_fires_a_notification_added_event_when_a_notification_is_pushed()
     {
         $this->expectsEvents(NotificationAdded::class);

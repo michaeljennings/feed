@@ -52,6 +52,22 @@ class Notification extends Model implements NotificationContract, Store
     protected $filters = [];
 
     /**
+     * Indicates that the queries should be ordered by the latest
+     * notifications.
+     *
+     * @var null|int
+     */
+    protected $latest = null;
+
+    /**
+     * Indicates that the queries should be ordered by the oldest
+     * notifications.
+     *
+     * @var null|int
+     */
+    protected $oldest = null;
+
+    /**
      * The member to be notified.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -82,6 +98,14 @@ class Notification extends Model implements NotificationContract, Store
 
         if ($this->offset) {
             $query->offset($this->offset);
+        }
+
+        if ($this->latest) {
+            $query->latest($this->latest);
+        }
+
+        if ($this->oldest) {
+            $query->oldest($this->oldest);
         }
 
         foreach($this->filters as $filter) {
@@ -116,6 +140,14 @@ class Notification extends Model implements NotificationContract, Store
 
         if ($this->offset) {
             $query->offset($this->offset);
+        }
+
+        if ($this->latest) {
+            $query->latest($this->latest);
+        }
+
+        if ($this->oldest) {
+            $query->oldest($this->oldest);
         }
 
         foreach($this->filters as $filter) {
@@ -177,6 +209,32 @@ class Notification extends Model implements NotificationContract, Store
     public function filter(callable $filter)
     {
         $this->filters[] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * Order the results by the latest notification.
+     *
+     * @param string $column
+     * @return $this
+     */
+    public function latest($column = 'created_at')
+    {
+        $this->latest = $column;
+
+        return $this;
+    }
+
+    /**
+     * Order the results by the oldest notification.
+     *
+     * @param string $column
+     * @return $this
+     */
+    public function oldest($column = 'created_at')
+    {
+        $this->oldest = $column;
 
         return $this;
     }

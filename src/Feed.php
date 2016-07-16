@@ -209,6 +209,32 @@ class Feed implements PushFeed, PullFeed
     }
 
     /**
+     * Order the results by the latest notification.
+     *
+     * @param string $column
+     * @return $this
+     */
+    public function latest($column = 'created_at')
+    {
+        $this->store->latest($column);
+
+        return $this;
+    }
+
+    /**
+     * Order the results by the oldest notification.
+     *
+     * @param string $column
+     * @return $this
+     */
+    public function oldest($column = 'created_at')
+    {
+        $this->store->oldest($column);
+
+        return $this;
+    }
+
+    /**
      * Mark the provided notification as read.
      *
      * @param int|Notification|array $notifications

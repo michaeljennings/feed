@@ -45,4 +45,28 @@ interface PullFeed
      * @return $this
      */
     public function paginate($perPage);
+
+    /**
+     * Add a filter to be called on the query results.
+     *
+     * @param callable $filter
+     * @return $this
+     */
+    public function filter(callable $filter);
+
+    /**
+     * Order the results by the latest notification.
+     *
+     * @param string $column
+     * @return $this
+     */
+    public function latest($column = 'created_at');
+
+    /**
+     * Order the results by the oldest notification.
+     *
+     * @param string $column
+     * @return $this
+     */
+    public function oldest($column = 'created_at');
 }

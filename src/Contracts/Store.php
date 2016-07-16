@@ -2,8 +2,6 @@
 
 namespace Michaeljennings\Feed\Contracts;
 
-use Michaeljennings\Feed\Store\Eloquent\Notification;
-
 interface Store
 {
     /**
@@ -75,4 +73,20 @@ interface Store
      * @return Notification[]
      */
     public function markAsUnread($notifications);
+
+    /**
+     * Order the results by the latest notification.
+     *
+     * @param string $column
+     * @return $this
+     */
+    public function latest($column = 'created_at');
+
+    /**
+     * Order the results by the oldest notification.
+     *
+     * @param string $column
+     * @return $this
+     */
+    public function oldest($column = 'created_at');
 }
