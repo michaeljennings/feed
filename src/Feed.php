@@ -185,52 +185,64 @@ class Feed implements PushFeed, PullFeed
     /**
      * Mark the provided notification as read.
      *
-     * @param int|Notification $notification
+     * @param int|Notification|array $notifications
      * @return mixed
      */
-    public function markAsRead($notification)
+    public function markAsRead($notifications)
     {
-        $notification = $this->store->markAsRead($notification);
+        if ( ! is_array($notifications)) {
+            $notifications = func_get_args();
+        }
 
-        event(new NotificationRead($notification));
+        $notifications = $this->store->markAsRead($notifications);
 
-        return $notification;
+        foreach ($notifications as $notification) {
+            event(new NotificationRead($notification));
+        }
+
+        return count($notifications) == 1 ? $notifications[0] : $notifications;
     }
 
     /**
      * Alias for the mark as read function.
      *
-     * @param int|Notification $notification
+     * @param int|Notification|array $notifications
      * @return mixed
      */
-    public function read($notification)
+    public function read($notifications)
     {
-        return $this->markAsRead($notification);
+        return $this->markAsRead($notifications);
     }
 
     /**
      * Mark the provided notification as unread.
      *
-     * @param int|Notification $notification
+     * @param int|Notification|array $notifications
      * @return mixed
      */
-    public function markAsUnread($notification)
+    public function markAsUnread($notifications)
     {
-        $notification = $this->store->markAsUnread($notification);
+        if ( ! is_array($notifications)) {
+            $notifications = func_get_args();
+        }
 
-        event(new NotificationUnread($notification));
+        $notifications = $this->store->markAsUnread($notifications);
 
-        return $notification;
+        foreach ($notifications as $notification) {
+            event(new NotificationUnread($notification));
+        }
+
+        return count($notifications) == 1 ? $notifications[0] : $notifications;
     }
 
     /**
      * Alias for the mark as unread function.
      *
-     * @param int|Notification $notification
+     * @param int|Notification|array $notifications
      * @return mixed
      */
-    public function unread($notification)
+    public function unread($notifications)
     {
-        return $this->unread($notification);
+        return $this->markAsUnread($notifications);
     }
 }

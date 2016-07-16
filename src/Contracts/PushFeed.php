@@ -13,34 +13,34 @@ interface PushFeed
     public function push($notification, $notifiable);
 
     /**
-     * Mark the provided notification as read.
+     * Mark the provided notification(s) as read.
      *
-     * @param int|Notification $notification
+     * @param int|Notification|array $notifications
      * @return mixed
      */
-    public function markAsRead($notification);
+    public function markAsRead($notifications);
 
     /**
      * Alias for the mark as read function.
      *
-     * @param int|Notification $notification
+     * @param int|Notification|array $notifications
      * @return mixed
      */
-    public function read($notification);
+    public function read($notifications);
 
     /**
-     * Mark the provided notification as unread.
+     * Mark the provided notification(s) as unread.
      *
-     * @param int|Notification $notification
+     * @param int|Notification|array $notifications
      * @return mixed
      */
-    public function markAsUnread($notification);
+    public function markAsUnread($notifications);
 
     /**
      * Alias for the mark as unread function.
      *
-     * @param int|Notification $notification
+     * @param int|Notification|array $notifications
      * @return mixed
      */
-    public function unread($notification);
+    public function unread($notifications);
 }

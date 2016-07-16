@@ -128,8 +128,8 @@ class Notification extends Model implements NotificationContract, Store
     /**
      * Mark the provided notification as read.
      *
-     * @param Notification|int|array $notifications
-     * @return bool
+     * @param NotificationContract|int|array $notifications
+     * @return NotificationContract[]
      */
     public function markAsRead($notifications)
     {
@@ -139,14 +139,16 @@ class Notification extends Model implements NotificationContract, Store
 
         $ids = $this->getIds($notifications);
 
-        return $this->whereIn($this->getKeyName(), $ids)->update(['read' => true, 'read_at' => new Carbon()]);
+        $this->whereIn($this->getKeyName(), $ids)->update(['read' => true, 'read_at' => new Carbon()]);
+
+        return $this->whereIn($this->getKeyName(), $ids)->get()->all();
     }
 
     /**
      * Mark the provided notification as unread.
      *
-     * @param Notification|int|array $notifications
-     * @return bool
+     * @param NotificationContract|int|array $notifications
+     * @return NotificationContract[]
      */
     public function markAsUnread($notifications)
     {
@@ -156,7 +158,9 @@ class Notification extends Model implements NotificationContract, Store
 
         $ids = $this->getIds($notifications);
 
-        return $this->whereIn($this->getKeyName(), $ids)->update(['read' => false, 'read_at' => null]);
+        $this->whereIn($this->getKeyName(), $ids)->update(['read' => false, 'read_at' => null]);
+
+        return $this->whereIn($this->getKeyName(), $ids)->get()->all();
     }
 
     /**

@@ -46,7 +46,7 @@ interface Store
      * Mark the provided notification as read.
      *
      * @param Notification|int|array $notifications
-     * @return bool
+     * @return Notification[]
      */
     public function markAsRead($notifications);
 
@@ -54,7 +54,7 @@ interface Store
      * Mark the provided notification as unread.
      *
      * @param Notification|int|array $notifications
-     * @return bool
+     * @return Notification[]
      */
     public function markAsUnread($notifications);
 }
