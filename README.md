@@ -40,7 +40,14 @@ $feed->markAsRead($notification);
 - [Available Methods](#available-methods)
     - [Push](#push)
     - [Pull](#pull)
-    - [Pull Read](#pull-read)
+        - [Pull Read](#pull-read)
+        - [Limiting Results](#limiting-results)
+        - [Offsetting Results](#offsetting-results)
+        - [Paginate Results](#paginate-results)
+        - [Filtering Results](#filtering-results)
+        - [Get the Latest Results](#get-the-latest-results)
+        - [Get the Oldest Results](#get-the-oldest-results)
+        - [Putting it All Together](#putting-it-all-together)
     - [Marking Notification as Read](#marking-notification-as-read)
     - [Marking Notification as Unread](#marking-notification-as-unread)
 
@@ -50,7 +57,7 @@ This package requires at least laravel 5.
 
 To install through composer include the package in your `composer.json`.
 
-    "michaeljennings/feed": "0.1.*"
+    "michaeljennings/feed": "0.2.*"
 
 Run `composer install` or `composer update` to download the dependencies, or you can run `composer require michaeljennings/feed`.
 
@@ -64,9 +71,37 @@ Once installed add the service provider to the providers array in `config/app.ph
 ];
 ```
 
-The package comes with migrations to setup the default database structure. We recommend using the migration and adding any columns as needed.
+To publish the migrations and config files run `php artisan vendor:publish`.
 
-To publish the migrations run `php artisan vendor:publish`.
+## Configuration
+
+The package comes with a default migration to create the database structure for the package. By default this table allows for the notifications to have a body, and an icon. If need more data for your notification such as a title, we recommend adding the columns to the default migration.
+
+The package comes with `feed.php` config file. This allows you to customise the database driver you are using with the package. At present only eloquent is supported, but we are working on a laravel db driver currently.
+ 
+You may require another driver, i.e. you're using a data store not supported by laravel. If this is the case you can add a driver to the system verify simply as shown below.
+
+```php
+// Here we grab the driver manager and then extend it to a new 'foo' driver.
+// Ideally this would be done within a service provider. 
+app('feed.manager')->extend('foo', function($app) {
+    return new Foo();
+});
+
+// The Foo driver needs to implement the Store interface so it has all of 
+// the necessary methods.
+class Foo implements Michaeljennings\Feed\Contracts\Store
+{
+    //
+}
+
+// The in the config file set the driver to our new foo driver.
+return [
+    'driver' => 'foo'
+]
+```
+
+For more information on adding drivers look at the [laravel documentation on extending the framework](https://laravel.com/docs/5.0/extending).
 
 ## Using the Feed
 
@@ -181,14 +216,7 @@ The pull method gets all of the unread notifications for the notifiable models y
 $feed->pull($user);
 ```
 
-You can also limit and offset the notifications but using the `limit` and `offset` methods respectively.
-
-```php
-$feed->limit(10)->pull($user);
-$feed->limit(10)->offset(1)->pull($user);
-```
-
-### Pull Read
+#### Pull Read
 
 To get all of the read notifications for a member, use the `pullRead` method.
 
@@ -196,11 +224,80 @@ To get all of the read notifications for a member, use the `pullRead` method.
 $feed->pullRead($user);
 ```
 
-You can also limit and offset the read notifications but using the `limit` and `offset` methods respectively.
+#### Limiting Results
+
+To limit the amount of notifications returned when pulling, chain the `limit` method.
 
 ```php
+$feed->limit(10)->pull($user);
 $feed->limit(10)->pullRead($user);
-$feed->limit(10)->offset(1)->pullRead($user);
+```
+
+#### Offsetting Results
+
+To offset the results when pulling, chain the `offset` method. This can be useful for infinte scrollers.
+
+```php
+$feed->offset(10)->pull($user);
+$feed->offset(10)->pullRead($user);
+```
+
+#### Paginate Results
+
+If you want to paginate the results and let laravel handle the limiting and offsetting for you, chain the `paginate` method.
+
+```php
+$feed->paginate(10)->pull($user);
+$feed->paginate(10)->pullRead($user);
+```
+
+#### Filtering Results
+
+From time to time you may wish to run additional queries on the notification results, to do this chain the filter method. 
+
+The filter method requires a closure which is passed an instance of the query builder. In the example below we're only getting results that have an alert icon.
+ 
+```php
+$feed->filter(function($query) {
+    $query->where('icon', 'icon-alert');
+})->pull($user);
+
+$feed->filter(function($query) {
+    $query->where('icon', 'icon-alert');
+})->pullRead($user);
+```
+
+#### Get the Latest Results
+
+To order the results by the latest notification added, chain the `latest` method. By default the notifications are ordered by the latest notification added.
+
+```php
+$feed->latest()->pull($user);
+$feed->latest()->pullRead($user);
+```
+
+#### Get the Oldest Results
+
+To order the results by the oldest notification added, chain the `oldest` method. By default the notifications are ordered by the latest notification added.
+
+```php
+$feed->oldest()->pull($user);
+$feed->oldest()->pullRead($user);
+```
+
+#### Putting it All Together
+
+All of these methods can be chained together, this should allow you to get the notifications in any way you require.
+
+```php
+// Limit and offset the results
+$feed->limit(10)->offset(10)->pull($user);
+
+
+// Get all of the oldest read notifications, that have an alert icon.
+$feed->filter(function($query) {
+    $query->where('icon', 'icon-alert');
+})->oldest()->pullRead($user);
 ```
 
 ### Marking Notification as Read
