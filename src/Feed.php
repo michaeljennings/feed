@@ -149,7 +149,7 @@ class Feed implements PushFeed, PullFeed
     protected function getUsersToPullFor($notifiable)
     {
         foreach ($notifiable as $key => $toBeNotified) {
-            if ( ! $toBeNotified instanceof Notifiable) {
+            if ( ! $toBeNotified instanceof Notifiable && ! $toBeNotified instanceof NotifiableGroup) {
                 throw new NotNotifiableException("The members passed to the pull must implement the notifiable interface");
             }
 
