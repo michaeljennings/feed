@@ -34,6 +34,9 @@ $feed->markAsRead($notification);
 ## Navigation
 
 - [Installation](#installation)
+- [Configuration](#configuration)
+    - [Changing the Notification Model](#changing-the-notification-model)
+    - [Adding a Driver](#adding-a-driver)
 - [Using the Feed](#using-the-feed)
 - [Setting Up Notifiable Models](#setting-up-notifiable-models)
     - [Notifiable Groups](#notifiable-groups)
@@ -78,6 +81,44 @@ To publish the migrations and config files run `php artisan vendor:publish`.
 The package comes with a default migration to create the database structure for the package. By default this table allows for the notifications to have a body, and an icon. If need more data for your notification such as a title, we recommend adding the columns to the default migration.
 
 The package comes with `feed.php` config file. This allows you to customise the database driver you are using with the package. At present only eloquent is supported, but we are working on a laravel db driver currently.
+ 
+### Changing the Notification Model 
+ 
+From time to time you may need to add additional methods or properties to the notification model, for example you might want to add an additional relationship to the notification model.
+
+This can be done very simply by changing the notification model in the config file as shown below.
+ 
+```php
+'drivers' => [
+    'eloquent' => [
+        'model' => 'Path\To\Notification', // Update this to your notification model.
+    ],
+]
+```
+
+The default notification model implements a couple of interfaces that are required by this package. If you need to make changes to the model I recommend extending the default model, otherwise make sure you implement the interfaces.
+
+```php
+// Example of extending the model
+class Notification extends \Michaeljennings\Feed\Store\Eloquent\Notification
+{
+    public function foo()
+    {
+        //
+    }
+}
+
+// Example of just implementing the interfaces
+class Notification implements \Michaeljennings\Feed\Contracts\Notification, \Michaeljennings\Feed\Contracts\Store
+{
+    public function bar()
+    {
+        //
+    }
+}
+```
+ 
+### Adding a Driver
  
 You may require another driver, i.e. you're using a data store not supported by laravel. If this is the case you can add a driver to the system verify simply as shown below.
 
