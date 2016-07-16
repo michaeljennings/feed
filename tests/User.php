@@ -16,4 +16,11 @@ class User extends Model implements NotifiableContract
      * @var array
      */
     protected $attributes = ['id' => 1];
+
+    /**
+     * Set the attributes available for mass assignment.
+     *
+     * @var array
+     */
+    protected $fillable = ['id'];
 }
