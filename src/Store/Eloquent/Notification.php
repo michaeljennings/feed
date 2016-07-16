@@ -38,6 +38,13 @@ class Notification extends Model implements NotificationContract, Store
     protected $offset = null;
 
     /**
+     * The amount to paginate the queries by.
+     *
+     * @var null|int
+     */
+    protected $paginate = null;
+
+    /**
      * The member to be notified.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -70,6 +77,10 @@ class Notification extends Model implements NotificationContract, Store
             $query->offset($this->offset);
         }
 
+        if ($this->paginate) {
+            return $query->paginate($this->paginate);
+        }
+
         return $query->get();
     }
 
@@ -94,6 +105,10 @@ class Notification extends Model implements NotificationContract, Store
 
         if ($this->offset) {
             $query->offset($this->offset);
+        }
+
+        if ($this->paginate) {
+            return $query->paginate($this->paginate);
         }
 
         return $query->get();
@@ -121,6 +136,19 @@ class Notification extends Model implements NotificationContract, Store
     public function offset($offset)
     {
         $this->offset = $offset;
+
+        return $this;
+    }
+
+    /**
+     * Set the amount to paginate the results by.
+     *
+     * @param int $perPage
+     * @return $this
+     */
+    public function paginateResults($perPage)
+    {
+        $this->paginate = $perPage;
 
         return $this;
     }

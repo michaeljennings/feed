@@ -190,7 +190,7 @@ class Feed implements PushFeed, PullFeed
      */
     public function paginate($perPage)
     {
-        $this->store->paginate($perPage);
+        $this->store->paginateResults($perPage);
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace Michaeljennings\Feed\Contracts;
 
+use Michaeljennings\Feed\Store\Eloquent\Notification;
+
 interface Store
 {
     /**
@@ -57,4 +59,12 @@ interface Store
      * @return Notification[]
      */
     public function markAsUnread($notifications);
+
+    /**
+     * Set the amount to paginate the results by.
+     *
+     * @param int $perPage
+     * @return $this
+     */
+    public function paginateResults($perPage);
 }
