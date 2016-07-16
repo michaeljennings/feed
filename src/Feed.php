@@ -183,6 +183,19 @@ class Feed implements PushFeed, PullFeed
     }
 
     /**
+     * Set the amount to paginate the feed by.
+     *
+     * @param int|string $perPage
+     * @return $this
+     */
+    public function paginate($perPage)
+    {
+        $this->store->paginate($perPage);
+
+        return $this;
+    }
+
+    /**
      * Mark the provided notification as read.
      *
      * @param int|Notification|array $notifications

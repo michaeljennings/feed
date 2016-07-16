@@ -2,6 +2,8 @@
 
 namespace Michaeljennings\Feed\Contracts;
 
+use Michaeljennings\Feed\Feed;
+
 interface PullFeed
 {
     /**
@@ -35,4 +37,12 @@ interface PullFeed
      * @return $this
      */
     public function offset($offset);
+
+    /**
+     * Set the amount to paginate the feed by.
+     *
+     * @param int|string $perPage
+     * @return $this
+     */
+    public function paginate($perPage);
 }
