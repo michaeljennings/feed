@@ -156,7 +156,7 @@ class FeedTest extends DbTestCase
         $feed->push('This notification will not be read', $user);
         $feed->push('This notification will be read', $user);
 
-        $notifications = $feed->pull($user);
+        $notifications = $feed->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
 
@@ -208,7 +208,7 @@ class FeedTest extends DbTestCase
         $feed->push('This notification will not be read', $user);
         $feed->push('This notification will be read', $user);
 
-        $notifications = $feed->pull($user);
+        $notifications = $feed->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
 
@@ -243,7 +243,7 @@ class FeedTest extends DbTestCase
         $feed->push('This notification will not be read', $user);
         $feed->push('This notification will be read', $user);
 
-        $notifications = $feed->pull($user);
+        $notifications = $feed->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
 
@@ -278,7 +278,7 @@ class FeedTest extends DbTestCase
         $feed->push('This notification will not be read', $user);
         $feed->push('This notification will be read', $user);
 
-        $notifications = $feed->pull($user);
+        $notifications = $feed->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
 
@@ -286,7 +286,7 @@ class FeedTest extends DbTestCase
 
         $this->assertEquals(1, $feed->pull($user)->count());
 
-        $readNotifications = $feed->pullRead($user);
+        $readNotifications = $feed->oldest()->pullRead($user);
 
         $this->assertEquals(1, $readNotifications->count());
         $this->assertEquals('This notification will be read', $readNotifications->first()->body);
@@ -304,7 +304,7 @@ class FeedTest extends DbTestCase
         $feed->push('This notification will not be read', $user);
         $feed->push('This notification will be read', $user);
 
-        $notifications = $feed->pull($user);
+        $notifications = $feed->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
 
@@ -319,7 +319,7 @@ class FeedTest extends DbTestCase
 
         $feed->markAsUnread($readNotifications->first()->id);
 
-        $notifications = $feed->pull($user);
+        $notifications = $feed->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('This notification will be read', $notifications->last()->body);
