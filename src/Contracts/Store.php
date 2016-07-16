@@ -11,20 +11,10 @@ interface Store
      *
      * @param array $types
      * @param array $ids
+     * @param bool  $read
      * @return Notification[]
      */
-    public function getNotifications(array $types, array $ids);
-
-    /**
-     * Get all of the read notifications where their notifiable type
-     * is in the array of types, and their notifiable id is in the
-     * array of ids.
-     *
-     * @param array $types
-     * @param array $ids
-     * @return Notification[]
-     */
-    public function getReadNotifications(array $types, array $ids);
+    public function getNotifications(array $types, array $ids, $read = false);
 
     /**
      * Add a limit to the query.

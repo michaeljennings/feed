@@ -82,48 +82,14 @@ class Notification extends Model implements NotificationContract, Store
      *
      * @param array $types
      * @param array $ids
-     * @return NotificationContract[]
+     * @param bool  $read
+     * @return \Michaeljennings\Feed\Contracts\Notification[]
      */
-    public function getNotifications(array $types, array $ids)
+    public function getNotifications(array $types, array $ids, $read = false)
     {
         $query = $this->whereIn('notifiable_type', $types)
                       ->whereIn('notifiable_id', $ids)
-                      ->where('read', false)
-                      ->orderBy($this->orderBy, $this->orderByDirection);
-
-        if ($this->limit) {
-            $query->limit($this->limit);
-        }
-
-        if ($this->offset) {
-            $query->offset($this->offset);
-        }
-
-        foreach($this->filters as $filter) {
-            $filter($query);
-        }
-
-        if ($this->paginate) {
-            return $query->paginate($this->paginate);
-        }
-
-        return $query->get();
-    }
-
-    /**
-     * Get all of the read notifications where their notifiable type
-     * is in the array of types, and their notifiable id is in the
-     * array of ids.
-     *
-     * @param array $types
-     * @param array $ids
-     * @return NotificationContract[]
-     */
-    public function getReadNotifications(array $types, array $ids)
-    {
-        $query = $this->whereIn('notifiable_type', $types)
-                      ->whereIn('notifiable_id', $ids)
-                      ->where('read', true)
+                      ->where('read', $read)
                       ->orderBy($this->orderBy, $this->orderByDirection);
 
         if ($this->limit) {

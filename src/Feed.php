@@ -123,7 +123,7 @@ class Feed implements PushFeed, PullFeed
             return $notifiable->getKey();
         }, $notifiable);
 
-        return $this->store->getReadNotifications($types, $ids);
+        return $this->store->getNotifications($types, $ids, true);
     }
 
     /**
