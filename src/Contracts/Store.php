@@ -51,18 +51,18 @@ interface Store
     /**
      * Mark the provided notification as read.
      *
-     * @param Notification|int|array $notifications
-     * @return Notification[]
+     * @param array|NotificationContract[] $notifications
+     * @return NotificationContract[]
      */
-    public function markAsRead($notifications);
+    public function markAsRead(array $notifications);
 
     /**
      * Mark the provided notification as unread.
      *
-     * @param Notification|int|array $notifications
-     * @return Notification[]
+     * @param array|NotificationContract[] $notifications
+     * @return NotificationContract[]
      */
-    public function markAsUnread($notifications);
+    public function markAsUnread(array $notifications);
 
     /**
      * Order the results by the latest notification.

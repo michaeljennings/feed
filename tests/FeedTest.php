@@ -5,6 +5,7 @@ namespace Michaeljennings\Feed\Tests;
 use Michaeljennings\Feed\Events\NotificationAdded;
 use Michaeljennings\Feed\Events\NotificationRead;
 use Michaeljennings\Feed\Events\NotificationUnread;
+use Michaeljennings\Feed\Facades\Feed;
 
 class FeedTest extends DbTestCase
 {
@@ -608,6 +609,30 @@ class FeedTest extends DbTestCase
 
         $feed->markAsRead($notifications->first());
         $feed->markAsUnread($notifications->first());
+    }
+
+    /**
+     * @test
+     */
+    public function it_tests_the_feed_helper()
+    {
+        $feed = feed();
+
+        $this->assertInstanceOf('Michaeljennings\Feed\Contracts\PullFeed', $feed);
+
+        $user = new User();
+
+        $this->assertInstanceOf('Illuminate\Support\Collection', feed($user));
+    }
+
+    /**
+     * @test
+     */
+    public function it_tests_the_facade_works_correctly()
+    {
+        $user = new User();
+
+        $this->assertInstanceOf('Illuminate\Support\Collection', Feed::pull($user));
     }
 
     protected function make()

@@ -28,7 +28,7 @@ class FeedServiceProvider extends ServiceProvider
         });
 
         $this->app->bind('feed.store', function($app) {
-            return (new Manager($app))->driver();
+            return $app['feed.manager']->driver();
         });
 
         $this->app->bind('feed', function($app) {
