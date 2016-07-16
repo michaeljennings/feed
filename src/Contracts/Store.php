@@ -45,16 +45,16 @@ interface Store
     /**
      * Mark the provided notification as read.
      *
-     * @param Notification|int $notification
-     * @return mixed
+     * @param Notification|int|array $notifications
+     * @return bool
      */
-    public function markAsRead($notification);
+    public function markAsRead($notifications);
 
     /**
      * Mark the provided notification as unread.
      *
-     * @param Notification|int $notification
-     * @return mixed
+     * @param Notification|int|array $notifications
+     * @return bool
      */
-    public function markAsUnread($notification);
+    public function markAsUnread($notifications);
 }
