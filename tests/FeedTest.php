@@ -340,7 +340,7 @@ class FeedTest extends DbTestCase
         $feed->push('Notification 3', $user);
         $feed->push('Notification 4', $user);
 
-        $notifications = $feed->limit(2)->pull($user);
+        $notifications = $feed->limit(2)->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('Notification 1', $notifications->first()->body);
@@ -360,7 +360,7 @@ class FeedTest extends DbTestCase
         $feed->push('Notification 3', $user);
         $feed->push('Notification 4', $user);
 
-        $notifications = $feed->limit(2)->offset(1)->pull($user);
+        $notifications = $feed->limit(2)->oldest()->offset(1)->pull($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('Notification 2', $notifications->first()->body);
@@ -385,7 +385,7 @@ class FeedTest extends DbTestCase
         $feed->markAsRead(3);
         $feed->markAsRead(4);
 
-        $notifications = $feed->limit(2)->pullRead($user);
+        $notifications = $feed->limit(2)->oldest()->pullRead($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('Notification 1', $notifications->first()->body);
@@ -410,7 +410,7 @@ class FeedTest extends DbTestCase
         $feed->markAsRead(3);
         $feed->markAsRead(4);
 
-        $notifications = $feed->limit(2)->offset(1)->pullRead($user);
+        $notifications = $feed->limit(2)->oldest()->offset(1)->pullRead($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('Notification 2', $notifications->first()->body);
@@ -430,7 +430,7 @@ class FeedTest extends DbTestCase
         $feed->push('Notification 3', $user);
         $feed->push('Notification 4', $user);
 
-        $notifications = $feed->paginate(2)->pull($user);
+        $notifications = $feed->paginate(2)->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('Notification 1', $notifications->first()->body);
@@ -438,7 +438,7 @@ class FeedTest extends DbTestCase
 
         request()->merge(['page' => 2]);
 
-        $notifications = $feed->paginate(2)->pull($user);
+        $notifications = $feed->paginate(2)->oldest()->pull($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('Notification 3', $notifications->first()->body);
@@ -463,7 +463,7 @@ class FeedTest extends DbTestCase
         $feed->markAsRead(3);
         $feed->markAsRead(4);
 
-        $notifications = $feed->paginate(2)->pullRead($user);
+        $notifications = $feed->paginate(2)->oldest()->pullRead($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('Notification 1', $notifications->first()->body);
@@ -471,7 +471,7 @@ class FeedTest extends DbTestCase
 
         request()->merge(['page' => 2]);
 
-        $notifications = $feed->paginate(2)->pullRead($user);
+        $notifications = $feed->paginate(2)->oldest()->pullRead($user);
 
         $this->assertEquals(2, $notifications->count());
         $this->assertEquals('Notification 3', $notifications->first()->body);
@@ -516,7 +516,7 @@ class FeedTest extends DbTestCase
 
         $notifications = $feed->filter(function($query) {
             $query->where('body', 'Notification 1');
-        })->pullRead($user);
+        })->oldest()->pullRead($user);
 
         $this->assertEquals(1, $notifications->count());
         $this->assertEquals('Notification 1', $notifications->first()->body);
