@@ -3,6 +3,7 @@
 namespace Michaeljennings\Feed;
 
 use Illuminate\Support\ServiceProvider;
+use Michaeljennings\Feed\Store\Manager;
 
 class FeedServiceProvider extends ServiceProvider
 {
@@ -11,9 +12,8 @@ class FeedServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/../migrations/' => database_path('migrations')
-        ], 'migrations');
+        $this->publishes([__DIR__ . '/../migrations/' => database_path('migrations')], 'migrations');
+        $this->publishes([__DIR__ . '/../config/' => config_path()], 'config');
     }
 
     /**
@@ -21,16 +21,16 @@ class FeedServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
-
-        $this->app->bind('michaeljennings.feed.repository', 'Michaeljennings\Feed\Notifications\Repository');
-
-        $this->app->bind('michaeljennings.feed', function($app) {
-            return new Feed($app['michaeljennings.feed.repository']);
+        $this->app->bind('Michaeljennings\Feed\Contracts\Store', function($app) {
+            return (new Manager($app))->driver();
         });
 
-        $this->app->alias('michaeljennings.feed.repository', 'Michaeljennings\Feed\Contracts\Repository');
-        $this->app->alias('michaeljennings.feed', 'Michaeljennings\Feed\Contracts\PullFeed');
-        $this->app->alias('michaeljennings.feed', 'Michaeljennings\Feed\Contracts\PushFeed');
+        $this->app->bind('feed', function($app) {
+            return new Feed($app['Michaeljennings\Feed\Contracts\Store']);
+        });
+
+        $this->app->alias('Michaeljennings\Feed\Contracts\Store', 'feed.store');
+        $this->app->alias('feed', 'Michaeljennings\Feed\Contracts\PullFeed');
+        $this->app->alias('feed', 'Michaeljennings\Feed\Contracts\PushFeed');
     }
 }
