@@ -1,4 +1,6 @@
-# Feed [![Build Status](https://travis-ci.org/michaeljennings/feed.svg?branch=master)](https://travis-ci.org/michaeljennings/feed) [![Coverage Status](https://coveralls.io/repos/github/michaeljennings/feed/badge.svg?branch=master)](https://coveralls.io/github/michaeljennings/feed?branch=master)
+# Feed (deprecated for Laravel 5.3+)  [![Build Status](https://travis-ci.org/michaeljennings/feed.svg?branch=master)](https://travis-ci.org/michaeljennings/feed) [![Coverage Status](https://coveralls.io/repos/github/michaeljennings/feed/badge.svg?branch=master)](https://coveralls.io/github/michaeljennings/feed?branch=master)
+
+> Note: This package is no longer maintaned for Laravel 5.3+ since Laravel now offers built in [notifications](https://laravel.com/docs/5.6/notifications).
 
 A basic notification feed for laravel 5+.
 
